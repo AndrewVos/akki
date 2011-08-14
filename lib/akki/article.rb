@@ -16,7 +16,7 @@ module Akki
       yaml = YAML.parse(parts[0])
       content = parts[1]
       title = yaml['title'].value
-      date  = Date.strptime(yaml['date'].value, '%d/%m/%Y')
+      date  = Date.strptime(yaml['date'].value, '%Y/%m/%d')
       Article.new(title, date, content)
     end
 

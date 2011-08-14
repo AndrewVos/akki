@@ -6,7 +6,7 @@ module Akki
     before do
       File.stub!(:read).and_return <<-ARTICLE
       title: the article title
-      date: 23/10/1983
+      date: 1983/10/23
 
       article content
       ARTICLE
