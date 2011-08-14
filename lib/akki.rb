@@ -1,5 +1,3 @@
+$:.unshift(File.dirname(__FILE__))
 require "akki/version"
-
-module Akki
-  # Your code goes here...
-end
+require "akki/application"
