@@ -17,9 +17,13 @@ Feature: Article
       %head
         %title= article.title
       %body
-        = article.render
+        = yield
     """
-    And I visit "1983/10/23/simple-article"
+    And the article template:
+    """
+    %div.article= article.render
+    """
+    When I visit "1983/10/23/simple-article"
     Then I should see:
     """
     <html>
@@ -27,7 +31,7 @@ Feature: Article
         <title>Simple Article</title>
       </head>
       <body>
-        <p>article content</p>
+        <div class='article'><p>article content</p></div>
       </body>
     </html>
 

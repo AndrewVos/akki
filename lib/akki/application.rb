@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'yaml'
+require 'ostruct'
 require 'akki/article'
 
 module Akki
@@ -13,8 +14,14 @@ module Akki
     end
 
     def render article
+      scope = OpenStruct.new
+      scope.article = article
       layout = File.read('templates/layout.haml')
-      Haml::Engine.new(layout).render(binding)
+      article_layout = File.read('templates/article.haml')
+
+      Haml::Engine.new(layout).render(scope) do
+        Haml::Engine.new(article_layout).render(binding)
+      end
     end
   end
 end

@@ -14,6 +14,14 @@ Given /^the layout template:$/ do |contents|
   end
 end
 
+Given /^the article template:$/ do |contents|
+  templates_path = File.join(File.dirname(__FILE__), '..', '..', 'templates')
+  FileUtils.mkdir_p(templates_path)
+  File.open(File.join(templates_path, 'article.haml'), 'w') do |file|
+    file.write(contents)
+  end
+end
+
 Given /^I visit "([^"]*)"$/ do |url|
   visit "/#{url}"
 end
