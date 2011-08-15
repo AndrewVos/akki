@@ -1,7 +1,7 @@
-Feature: Article
-  In order to display articles on
+Feature: Article Page
+  In order to display articles
   As a user
-  I want to be render blog pages
+  I want to be able to view an article
 
   Scenario: Simple Article
     Given I have the article file "1983-10-23-simple-article.txt"
