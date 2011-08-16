@@ -7,17 +7,17 @@ Given /^I have the article file "([^"]*)"$/ do |article_file, article_contents|
 end
 
 Given /^the layout template:$/ do |contents|
-  templates_path = File.join(File.dirname(__FILE__), '..', '..', 'templates')
-  FileUtils.mkdir_p(templates_path)
-  File.open(File.join(templates_path, 'layout.haml'), 'w') do |file|
+  views_path = File.join(File.dirname(__FILE__), '..', '..', 'views')
+  FileUtils.mkdir_p(views_path)
+  File.open(File.join(views_path, 'layout.haml'), 'w') do |file|
     file.write(contents)
   end
 end
 
 Given /^the article template:$/ do |contents|
-  templates_path = File.join(File.dirname(__FILE__), '..', '..', 'templates')
-  FileUtils.mkdir_p(templates_path)
-  File.open(File.join(templates_path, 'article.haml'), 'w') do |file|
+  views_path = File.join(File.dirname(__FILE__), '..', '..', 'views')
+  FileUtils.mkdir_p(views_path)
+  File.open(File.join(views_path, 'article.haml'), 'w') do |file|
     file.write(contents)
   end
 end
