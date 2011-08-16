@@ -13,10 +13,10 @@ module Akki
     def self.from_file year, month, day, slug
       path = "articles/#{year}-#{month}-#{day}-#{slug}.txt"
       parts = File.read(path).split("\n\n", 2)
-      yaml = YAML.parse(parts[0])
+      yaml = YAML.load(parts[0])
       content = parts[1]
-      title = yaml['title'].value
-      date  = Date.strptime(yaml['date'].value, '%Y/%m/%d')
+      title = yaml['title']
+      date  = Date.strptime(yaml['date'], '%Y/%m/%d')
       Article.new(title, date, content)
     end
 
