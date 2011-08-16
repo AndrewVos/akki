@@ -13,14 +13,15 @@ module Akki
         @article = mock :article
         @article.stub!(:render).and_return 'article content'
         @article.stub!(:title).and_return 'article title'
-        File.stub!(:read).with('templates/layout.haml').and_return '%div= yield'
-        File.stub!(:read).with('templates/article.haml').and_return '%p= article.render'
-        Article.stub!(:from_file).and_return @article
-      end
 
-      it "is successful" do
-        get '/2011/10/23/simple-article'
-        last_response.should be_ok
+        File.open('views/layout.haml', 'w') do |file|
+          file.write("= article.title\n=yield")
+        end
+
+        File.open('views/article.haml', 'w') do |file|
+          file.write('%p= article.render')
+        end
+        Article.stub!(:from_file).and_return @article
       end
 
       it "loads an article" do
@@ -30,11 +31,10 @@ module Akki
 
       it "renders the article inside an article template" do
         get '/2011/10/23/simple-article'
-        last_response.body.should include '<div><p>article content</p></div>'
+        last_response.body.should include 'article content'
       end
 
-      it "passes the article through through to the layout when rendering" do
-        File.stub!(:read).with('templates/layout.haml').and_return '= article.title'
+      it "passes the article through to the view when rendering" do
         get '/2011/10/23/simple-article'
         last_response.body.should include 'article title'
       end
