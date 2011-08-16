@@ -8,19 +8,15 @@ module Akki
       Application
     end
 
+    before do
+      Application.set :views, "spec/fixtures/views"
+    end
+
     describe "GET /23/10/2011/simple-article" do
       before do
         @article = mock :article
         @article.stub!(:render).and_return 'article content'
         @article.stub!(:title).and_return 'article title'
-
-        File.open('views/layout.haml', 'w') do |file|
-          file.write("= article.title\n=yield")
-        end
-
-        File.open('views/article.haml', 'w') do |file|
-          file.write('%p= article.render')
-        end
         Article.stub!(:from_file).and_return @article
       end
 
@@ -29,14 +25,16 @@ module Akki
         get '/2011/10/23/simple-article'
       end
 
-      it "renders the article inside an article template" do
+      it "renders the article" do
         get '/2011/10/23/simple-article'
         last_response.body.should include 'article content'
       end
+    end
 
-      it "passes the article through to the view when rendering" do
-        get '/2011/10/23/simple-article'
-        last_response.body.should include 'article title'
+    describe "GET /page_name" do
+      it "renders a custom page" do
+        get '/page_name'
+        last_response.body.should include 'this is my page!'
       end
     end
   end

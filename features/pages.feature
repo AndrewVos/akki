@@ -4,23 +4,9 @@ Feature: Pages
   I want to display custom pages
 
   Scenario: About page
-    Given I have the page "about.haml":
-    """
-    %p This is the about page
-    """
-    And the layout template:
-    """
-    %html
-      %body
-        = yield
-    """
-    When I visit "about"
+    Given I have the page "example-page"
+    When I visit "example-page"
     Then I should see:
     """
-    <html>
-      <body>
-        <p>This is the about page</p>
-      </body>
-    </html>
-
+    <p>This is the example page</p>
     """

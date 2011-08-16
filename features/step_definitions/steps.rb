@@ -1,3 +1,7 @@
+Before do
+  Akki::Application.set :views, "features/fixtures/views"
+end
+
 Given /^I have the article file "([^"]*)"$/ do |article_file, article_contents|
   articles_path = File.join(File.dirname(__FILE__), '..', '..', 'articles')
   FileUtils.mkdir_p(articles_path)
@@ -6,20 +10,7 @@ Given /^I have the article file "([^"]*)"$/ do |article_file, article_contents|
   end
 end
 
-Given /^the layout template:$/ do |contents|
-  views_path = File.join(File.dirname(__FILE__), '..', '..', 'views')
-  FileUtils.mkdir_p(views_path)
-  File.open(File.join(views_path, 'layout.haml'), 'w') do |file|
-    file.write(contents)
-  end
-end
-
-Given /^the article template:$/ do |contents|
-  views_path = File.join(File.dirname(__FILE__), '..', '..', 'views')
-  FileUtils.mkdir_p(views_path)
-  File.open(File.join(views_path, 'article.haml'), 'w') do |file|
-    file.write(contents)
-  end
+Given /^I have the page "example-page"$/ do
 end
 
 Given /^I visit "([^"]*)"$/ do |url|
@@ -27,5 +18,5 @@ Given /^I visit "([^"]*)"$/ do |url|
 end
 
 Then /^I should see:$/ do |content|
-  page.source.should == content
+  page.source.should include content
 end

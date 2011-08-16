@@ -11,28 +11,8 @@ Feature: Article Page
 
     %p article content
     """
-    And the layout template:
-    """
-    %html
-      %head
-        %title= article.title
-      %body
-        = yield
-    """
-    And the article template:
-    """
-    %div.article= article.render
-    """
     When I visit "1983/10/23/simple-article"
     Then I should see:
     """
-    <html>
-      <head>
-        <title>Simple Article</title>
-      </head>
-      <body>
-        <div class='article'><p>article content</p></div>
-      </body>
-    </html>
-
+    <div class='article'><p>article content</p></div>
     """
