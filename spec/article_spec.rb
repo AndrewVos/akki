@@ -3,43 +3,50 @@ require 'akki/article'
 
 module Akki
   describe Article do
-    before do
-      File.stub!(:read).and_return <<-ARTICLE
-      title: the article title
-      date: 1983/10/23
-
-      article content
-      ARTICLE
-    end
-
-    it "reads article content from a file" do
-      File.should_receive(:read).with('articles/2011-10-23-article-slug.txt')
-      Article.from_file(2011, 10, 23, 'article-slug')
-    end
-
-    it "loads the title" do
-      article = Article.from_file(2011, 10, 23, 'article-slug')
-      article.title.should == 'the article title'
-    end
-
-    it "loads the date" do
-      article = Article.from_file(2011, 10, 23, 'article-slug')
-      article.date.year.should  == 1983
-      article.date.month.should == 10
-      article.date.day.should   == 23
-    end
-
-    it "loads the article content" do
-      article = Article.from_file(2011, 10, 23, 'article-slug')
-      article.content.should include 'article content'
-    end
-
     it "renders the content" do
-      engine = mock :engine
-      engine.stub!(:render).and_return 'rendered content'
-      Haml::Engine.stub!(:new).and_return(engine)
-      article = Article.from_file(2011, 10, 23, 'article-slug')
-      article.render.should == 'rendered content'
+      article = Article.new("an article", Date.new(2011, 10, 10), "%p article content", "an-article")
+      article.render.should include '<p>article content</p>'
+    end
+
+    def article_should_match article, title, date, content, slug
+      article.title.should    == title
+      article.date.should     == date
+      article.content.should  == content
+      article.slug.should     == slug
+    end
+
+    it "loads all articles" do
+      articles = [
+        "articles/2012-10-23-article1.txt",
+        "articles/2011-11-25-article2.txt"
+      ]
+      Dir.stub!(:glob).with("articles/*").and_return(articles)
+      File.stub!(:read).with(articles.first).and_return("title: article 1\ndate: 2012/10/23\n\narticle 1 content")
+      File.stub!(:read).with(articles.last).and_return("title: article 2\ndate: 2011/11/25\n\narticle 2 content")
+
+      article_should_match(Article.all.first, "article 1", Date.new(2012, 10, 23), "article 1 content", "article1")
+      article_should_match(Article.all.last, "article 2", Date.new(2011, 11, 25), "article 2 content", "article2")
+    end
+
+    it "sorts articles by date" do
+      articles = [
+        "articles/2009-10-23-article1.txt",
+        "articles/2011-11-25-article2.txt"
+      ]
+      Dir.stub!(:glob).with("articles/*").and_return(articles)
+      File.stub!(:read).with(articles.first).and_return("title: article 1\ndate: 2009/10/23\n\narticle 1 content")
+      File.stub!(:read).with(articles.last).and_return("title: article 2\ndate: 2011/11/25\n\narticle 2 content")
+      Article.all.first.title.should == "article 2"
+      Article.all.last.title.should == "article 1"
+    end
+
+    it "finds an article" do
+      articles = [
+        Article.new("an article", Date.new(2011, 10, 10), "article 1 content", "an-article"),
+        Article.new("Some Article", Date.new(2033, 4, 3), "article 2 content", "some-article")
+      ]
+      Article.stub!(:all).and_return(articles)
+      Article.find(2033, 4, 3, "some-article").should == articles.last
     end
   end
 end
