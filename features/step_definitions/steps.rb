@@ -27,3 +27,7 @@ end
 
 Given /^I have an archive template that shows the article title$/ do
 end
+
+Then /^I should see a (\d+) html status code$/ do |status_code|
+  page.status_code.should == status_code.to_i
+end

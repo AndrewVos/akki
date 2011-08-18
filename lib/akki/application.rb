@@ -16,7 +16,11 @@ module Akki
     end
 
     get "/:page/?" do
-      haml params[:page].to_sym, :locals => { :articles => Article.all }
+      begin
+        haml params[:page].to_sym, :locals => { :articles => Article.all }
+      rescue
+        error 404
+      end
     end
   end
 end

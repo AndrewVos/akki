@@ -73,5 +73,12 @@ module Akki
         last_response.body.should include "article 2"
       end
     end
+
+    describe "GET page-that-does-not-exist" do
+      it "404s" do
+        get '/page-that-does-not-exist'
+        last_response.should be_not_found
+      end
+    end
   end
 end

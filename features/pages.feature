@@ -10,3 +10,7 @@ Feature: Pages
     """
     <p>This is the example page</p>
     """
+
+  Scenario: Page that doesn't exist
+    When I visit "/page-that-does-not-exist/"
+    Then I should see a 404 html status code
