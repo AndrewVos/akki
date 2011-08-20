@@ -11,13 +11,12 @@ module Akki
       @slug = slug
     end
 
-    def self.find year, month, day, slug
-      article = all.select { |article|
-        article.date.year  == year  &&
-        article.date.month == month &&
-        article.date.day   == day   &&
-        article.slug       == slug
-      }.first
+    def render
+      Haml::Engine.new(content).render
+    end
+
+    def path
+      date.strftime("/%Y/%m/%d/") + slug
     end
 
     class << self
@@ -26,6 +25,15 @@ module Akki
           @articles = get_all_articles
         end
         @articles
+      end
+
+      def find year, month, day, slug
+        article = all.select { |article|
+          article.date.year  == year  &&
+          article.date.month == month &&
+          article.date.day   == day   &&
+          article.slug       == slug
+        }.first
       end
 
       private
@@ -45,10 +53,6 @@ module Akki
         slug = File.basename(path).split("-", 4).last.gsub(".txt", "")
         Article.new(title, date, content, slug)
       end
-    end
-
-    def render
-      Haml::Engine.new(content).render
     end
   end
 end

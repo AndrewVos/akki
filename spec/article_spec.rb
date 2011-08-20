@@ -61,5 +61,10 @@ module Akki
       Article.stub!(:all).and_return(articles)
       Article.find(2033, 4, 3, "some-article").should == articles.last
     end
+
+    it "knows it's path" do
+      article = Article.new("The best article ever", Date.new(1220, 5, 3), "content", "the-article-slug")
+      article.path.should == "/1220/05/03/the-article-slug"
+    end
   end
 end
