@@ -13,15 +13,30 @@ module Akki
 
     def self.find year, month, day, slug
       article = all.select { |article|
-        article.date.year  == year &&
+        article.date.year  == year  &&
         article.date.month == month &&
-        article.date.day   == day &&
-        article.slug  == slug
+        article.date.day   == day   &&
+        article.slug       == slug
       }.first
     end
 
-    def self.all
-      articles = Dir.glob("articles/*").map do |path|
+    class << self
+      def all
+        unless defined? @articles
+          @articles = get_all_articles
+        end
+        @articles
+      end
+
+      private
+
+      def get_all_articles
+        Dir.glob("articles/*").map { |path|
+          get_article path
+        }.sort { |a, b| a.date <=> b.date }.reverse
+      end
+
+      def get_article path
         parts = File.read(path).split("\n\n", 2)
         yaml = YAML.load(parts[0])
         content = parts[1]
@@ -30,10 +45,6 @@ module Akki
         slug = File.basename(path).split("-", 4).last.gsub(".txt", "")
         Article.new(title, date, content, slug)
       end
-
-      articles = articles.sort do |a, b|
-        a.date <=> b.date
-      end.reverse
     end
 
     def render

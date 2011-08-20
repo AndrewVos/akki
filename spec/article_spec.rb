@@ -28,6 +28,18 @@ module Akki
       article_should_match(Article.all.last, "article 2", Date.new(2011, 11, 25), "article 2 content", "article2")
     end
 
+    it "only loads articles once" do
+      articles = [
+        "articles/2012-10-23-article1.txt",
+        "articles/2011-11-25-article2.txt"
+      ]
+      Dir.should_receive(:glob).once.and_return(articles)
+      File.should_receive(:read).once.and_return("title: article 1\ndate: 2012/10/23\n\narticle 1 content")
+      File.should_receive(:read).once.and_return("title: article 2\ndate: 2011/11/25\n\narticle 2 content")
+      Article.all
+      Article.all
+    end
+
     it "sorts articles by date" do
       articles = [
         "articles/2009-10-23-article1.txt",
@@ -36,6 +48,7 @@ module Akki
       Dir.stub!(:glob).with("articles/*").and_return(articles)
       File.stub!(:read).with(articles.first).and_return("title: article 1\ndate: 2009/10/23\n\narticle 1 content")
       File.stub!(:read).with(articles.last).and_return("title: article 2\ndate: 2011/11/25\n\narticle 2 content")
+
       Article.all.first.title.should == "article 2"
       Article.all.last.title.should == "article 1"
     end

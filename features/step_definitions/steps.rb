@@ -5,7 +5,6 @@ Before do
   FileUtils.mkdir_p(@articles_path)
   FileUtils.mkdir_p(@views_path)
   FileUtils.mkdir_p(@pages_path)
-  Akki::Application.set :reload_templates, true
 end
 
 After do
