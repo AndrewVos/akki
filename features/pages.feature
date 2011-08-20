@@ -1,10 +1,13 @@
 Feature: Pages
   In order to display custom pages
-  As a user
+  As a blogger
   I want to display custom pages
 
-  Scenario: About page
-    Given I have the page "example-page"
+  Scenario: Page
+    Given I have the page "example-page.haml":
+    """
+    %p This is the example page
+    """
     When I visit "/example-page"
     Then I should see:
     """

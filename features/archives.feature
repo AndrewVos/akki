@@ -19,11 +19,15 @@ Feature: Archives
     title: Article 1
     date:  2008/04/23
     """
-    And I have an archive template that shows the article title
+    And I have the page "archives.haml":
+    """
+    - articles.each do |article|
+      %p= article.title
+    """
     When I visit "/archives"
     Then I should see:
     """
-        <p>Article 1</p>
-        <p>Article 2</p>
-        <p>Article 3</p>
+    <p>Article 1</p>
+    <p>Article 2</p>
+    <p>Article 3</p>
     """

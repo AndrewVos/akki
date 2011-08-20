@@ -1,10 +1,15 @@
 require 'sinatra/base'
-require 'yaml'
-require 'ostruct'
 require 'akki/article'
 
 module Akki
   class Application < Sinatra::Base
+    set :root, File.join(File.dirname(__FILE__), '..', '..')
+
+    get '/:page_name/?' do
+      page_name = params[:page_name].to_sym
+      pass unless settings.pages.include? page_name
+      haml :"pages/#{page_name}", :locals => { :articles => Article.all }
+    end
 
     get "/:year/:month/:day/:slug/?" do
       year  = params[:year].to_i
@@ -13,14 +18,6 @@ module Akki
       slug  = params[:slug]
       article = Article::find(year, month, day, slug)
       haml :article, :locals => { :article => article }
-    end
-
-    get "/:page/?" do
-      begin
-        haml params[:page].to_sym, :locals => { :articles => Article.all }
-      rescue
-        error 404
-      end
     end
   end
 end

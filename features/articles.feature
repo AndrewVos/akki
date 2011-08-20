@@ -11,6 +11,10 @@ Feature: Article Page
 
     %p article content
     """
+    And the article view:
+    """
+    %div.article= article.render
+    """
     When I visit "/1983/05/23/simple-article"
     Then I should see:
     """

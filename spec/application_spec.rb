@@ -12,15 +12,35 @@ module Akki
 
     before do
       @views_path = File.join(File.dirname(__FILE__), '..', 'views')
+      @public_path = File.join(File.dirname(__FILE__), '..', 'public')
+      @pages_path = File.join(@views_path, 'pages')
       FileUtils.mkdir_p @views_path
+      FileUtils.mkdir_p @public_path
+      FileUtils.mkdir_p @pages_path
+
+      @pages = mock :pages
+      @pages.stub!(:all).and_return []
     end
 
     after do
       FileUtils.rm_rf @views_path
+      FileUtils.rm_rf @public_path
     end
 
     def create_view name, contents
       File.open(File.join(@views_path, name), 'w') do |file|
+        file.write(contents)
+      end
+    end
+
+    def create_public name, contents
+      File.open(File.join(@public_path, name), 'w') do |file|
+        file.write(contents)
+      end
+    end
+
+    def create_page name, contents
+      File.open(File.join(@pages_path, name), 'w') do |file|
         file.write(contents)
       end
     end
@@ -54,8 +74,9 @@ module Akki
 
     describe "GET /page_name" do
       it "renders a custom page" do
+        Application.set :pages, [:page_name]
         Article.stub!(:all).and_return []
-        create_view 'page_name.haml', 'this is my page!'
+        create_page 'page_name.haml', 'this is my page!'
         get '/page_name'
         last_response.body.should include 'this is my page!'
       end
@@ -67,7 +88,11 @@ module Akki
           Article.new("article 1", nil, "article 1 content", "article1"),
           Article.new("article 2", nil, "article 2 content", "article2")
         ])
-        create_view 'archives.haml', "- articles.each do |a|\n  %p= a.title"
+
+        @pages.stub!(:all).and_return ["archives"]
+        Application.set :pages, [:archives]
+        create_page 'archives.haml', "- articles.each do |a|\n  %p= a.title"
+        Application.set :pages => [:archives]
         get '/archives'
         last_response.body.should include "article 1"
         last_response.body.should include "article 2"
@@ -78,6 +103,14 @@ module Akki
       it "404s" do
         get '/page-that-does-not-exist'
         last_response.should be_not_found
+      end
+    end
+
+    describe "GET file that exists in public folder" do
+      it "returns the file" do
+        create_public "main.css", "body { }"
+        get '/main.css'
+        last_response.body.should == "body { }"
       end
     end
   end
