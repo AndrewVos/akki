@@ -75,13 +75,6 @@ module Akki
         last_response.body.should include "article title"
       end
 
-      it "can render any article" do
-        @article.stub!(:content).and_return '%p article content'
-        create_page "article.haml", "= render_article(articles.first)"
-        get '/2011/10/23/simple-article'
-        last_response.body.should include "<p>article content</p>"
-      end
-
       it "passes the article object through to the article view" do
         create_page "article.haml", "= article.title"
         get '/2011/10/23/simple-article'
@@ -111,21 +104,21 @@ module Akki
         get '/page_name'
         last_response.body.should include 'this is my page!'
       end
-    end
 
-    context "page that lists articles" do
-      it "lists all articles" do
-        Article.stub!(:all).and_return([
-          Article.new("article 1", nil, "article 1 content", "article1"),
-          Article.new("article 2", nil, "article 2 content", "article2")
-        ])
+      context "page that lists articles" do
+        it "can render articles" do
+          Article.stub!(:all).and_return([
+            Article.new("article 1", nil, "%p article 1 content", "article1"),
+            Article.new("article 2", nil, "%p article 2 content", "article2")
+          ])
 
-        @pages.stub!(:all).and_return ["archives"]
-        create_page 'archives.haml', "- articles.each do |a|\n  %p= a.title"
-        Application.set :pages, [:archives]
-        get '/archives'
-        last_response.body.should include "article 1"
-        last_response.body.should include "article 2"
+          @pages.stub!(:all).and_return ["archives"]
+          create_page 'archives.haml', "- articles.each do |a|\n  = render_article(a)"
+          Application.set :pages, [:archives]
+          get '/archives'
+          last_response.body.should include "<p>article 1 content</p>"
+          last_response.body.should include "<p>article 2 content</p>"
+        end
       end
     end
 
