@@ -3,6 +3,10 @@ Feature: Article Page
   As a user
   I want to be able to view an article and it's relevant information
 
+  Scenario: Article url that does not exist
+    When I visit "/1983/11/11/article-that-does-not-exist"
+    Then I should see a 404 html status code
+
   Scenario: Simple Article
     Given I have the article file "1983-05-23-simple-article.txt"
     """

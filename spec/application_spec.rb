@@ -78,6 +78,13 @@ module Akki
       end
     end
 
+    describe "GET /2011/10/01/article-that-does-not-exist" do
+      it "should 404" do
+        get '/2011/10/01/article-that-does-not-exist'
+        last_response.should be_not_found
+      end
+    end
+
     describe "GET /page_name" do
       it "renders a custom page" do
         Application.set :pages, [:page_name]
