@@ -20,7 +20,7 @@ Feature: Feeds
         = settings.title
       %id http://example.org
       %updated
-        = articles.first.date.iso8601
+        = context.articles.first.date.iso8601
     """
     And I have the article file "1983-05-23-simple-article.txt"
     """

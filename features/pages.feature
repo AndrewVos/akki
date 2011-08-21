@@ -36,7 +36,7 @@ Feature: Pages
     And I have the page "article.haml" with the contents
     """
     Article
-    = render_article(articles.last)
+    = render_article(context.articles.last)
     """
     When I visit "/1983/05/23/simple-article"
     Then I should see:

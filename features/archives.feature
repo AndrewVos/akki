@@ -21,7 +21,7 @@ Feature: Archives
     """
     And I have the page "archives.haml" with the contents
     """
-    - articles.each do |article|
+    - context.articles.each do |article|
       %p= article.title
     """
     When I visit "/archives"

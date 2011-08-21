@@ -1,10 +1,12 @@
 require 'sinatra/base'
 require 'akki/article'
-require 'ostruct'
+require 'akki/context'
 
 module Akki
   class Application < Sinatra::Base
     set :root, File.join(File.dirname(__FILE__), '..', '..')
+
+    attr_reader :context
 
     get '/?' do
       render_page :index
@@ -13,6 +15,8 @@ module Akki
     get '/:page_name/?' do
       page_name = params[:page_name].to_sym
       pass unless settings.pages.include? page_name
+      @context = Context.new
+      @context.articles = Article.all
       render_page page_name
     end
 
@@ -23,22 +27,24 @@ module Akki
       slug  = params[:slug]
       article = Article::find(year, month, day, slug)
       pass unless article
-      render_page :article, {:article => article}
+
+      @context = Context.new
+      @context.article = article
+      @context.articles = Article.all
+      render_page :article
     end
 
-    def render_page page = :index, locals = {}
-      default_locals = {:articles => Article.all, :article => nil}
-
+    def render_page page = :index
       if page.to_s.end_with? ".xml"
         content_type :atom
-        haml :"pages/#{page}", :locals => default_locals.merge(locals), :layout => false
+        haml :"pages/#{page}", :layout => false
       else
-        haml :"pages/#{page}", :locals => default_locals.merge(locals)
+        haml :"pages/#{page}"
       end
     end
 
     def render_article article
-      haml article.content, :layout => false, :locals => {:article => article}
+      haml article.content, :layout => false
     end
   end
 end

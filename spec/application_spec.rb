@@ -42,6 +42,13 @@ module Akki
       write_file(File.join(@pages_path, name), contents)
     end
 
+    def mock_context(value = "the context value")
+      context = Context.new
+      context.value = value
+      Context.stub!(:new).and_return(context)
+      context
+    end
+
     describe "GET /" do
       it "renders the index page" do
         create_page "index.haml", "Home Page"
@@ -55,9 +62,39 @@ module Akki
         @article = mock :article
         @article.stub!(:title).and_return 'article title'
         @article.stub!(:content).and_return 'article content'
-        create_page "article.haml", "= render_article(article)"
+        create_page "article.haml", "= render_article(context.article)"
         Article.stub!(:all).and_return([@article])
         Article.stub!(:find).and_return @article
+      end
+
+      it "passes the context object through to the article view" do
+        mock_context
+        create_page("article.haml", "= context.value")
+        get '/2011/10/23/simple-article'
+        last_response.body.should == "the context value\n"
+      end
+
+      it "passes the context object through to the article" do
+        mock_context
+        @article.stub!(:content).and_return("= context")
+        get '/2011/10/23/simple-article'
+        last_response.body.should include "the context value"
+      end
+
+      it "adds the article to the context object" do
+        context = mock_context
+        context.article = @article
+        context.should_receive(:article=).with(@article)
+        get '/2011/10/23/simple-article'
+      end
+
+      it "adds the articles to the context object" do
+        context = mock_context
+        articles = mock(:articles).as_null_object
+        Article.stub!(:all).and_return(articles)
+        create_page 'page_name.haml', 'this is my page!'
+        context.should_receive(:articles=).with(articles)
+        get '/2011/10/23/simple-article'
       end
 
       it "loads an article" do
@@ -66,21 +103,9 @@ module Akki
         get '/2011/10/23/simple-article'
       end
 
-      it "passes the article object through to the article" do
-        @article.stub!(:content).and_return '= article.title'
-        get '/2011/10/23/simple-article'
-        last_response.body.should include "article title"
-      end
-
-      it "passes the article object through to the article view" do
-        create_page "article.haml", "= article.title"
-        get '/2011/10/23/simple-article'
-        last_response.body.should include "article title"
-      end
-
       it "does not render the layout when rendering the article content" do
         create_view "layout.haml", "Layout\n= yield"
-        create_page "article.haml", "Article\n= render_article(article)"
+        create_page "article.haml", "Article\n= render_article(context.article)"
         get '/2011/10/23/simple-article'
         last_response.body.should_not include "Layout\nArticle\nLayout\narticle content"
       end
@@ -102,19 +127,20 @@ module Akki
         last_response.body.should include 'this is my page!'
       end
 
-      context "page that lists articles" do
-        it "can render articles" do
-          Article.stub!(:all).and_return([
-            Article.new({:title => "article 1", :date => nil, :content => "%p article 1 content", :slug => "article1"}),
-            Article.new({:title => "article 2", :date => nil, :content => "%p article 2 content", :slug => "article2"})
-          ])
+      it "passes the context object through to the page view" do
+        mock_context
+        Application.set :pages, [:page_name]
+        create_page "page_name.haml", "= context.value"
+        get '/page_name'
+        last_response.body.should == "the context value\n"
+      end
 
-          create_page 'archives.haml', "- articles.each do |a|\n  = render_article(a)"
-          Application.set :pages, [:archives]
-          get '/archives'
-          last_response.body.should include "<p>article 1 content</p>"
-          last_response.body.should include "<p>article 2 content</p>"
-        end
+      it "adds the articles to the context object" do
+        articles = mock(:articles).as_null_object
+        mock_context.should_receive(:articles=).with(articles)
+        Article.stub!(:all).and_return(articles)
+        create_page 'page_name.haml', 'this is my page!'
+        get '/page_name'
       end
 
       context "template name ending in .xml" do
@@ -136,7 +162,7 @@ module Akki
       end
     end
 
-    describe "GET page-that-does-not-exist" do
+    describe "GET page that doesn't exist" do
       it "404s" do
         get '/page-that-does-not-exist'
         last_response.should be_not_found
