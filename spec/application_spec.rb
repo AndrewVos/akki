@@ -105,8 +105,8 @@ module Akki
       context "page that lists articles" do
         it "can render articles" do
           Article.stub!(:all).and_return([
-            Article.new("article 1", nil, "%p article 1 content", "article1"),
-            Article.new("article 2", nil, "%p article 2 content", "article2")
+            Article.new({:title => "article 1", :date => nil, :content => "%p article 1 content", :slug => "article1"}),
+            Article.new({:title => "article 2", :date => nil, :content => "%p article 2 content", :slug => "article2"})
           ])
 
           create_page 'archives.haml', "- articles.each do |a|\n  = render_article(a)"

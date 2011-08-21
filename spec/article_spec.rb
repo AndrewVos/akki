@@ -50,15 +50,15 @@ module Akki
 
     it "finds an article" do
       articles = [
-        Article.new("an article", Date.new(2011, 10, 10), "article 1 content", "an-article"),
-        Article.new("Some Article", Date.new(2033, 4, 3), "article 2 content", "some-article")
+        Article.new({:title => "an article", :date => Date.new(2011, 10, 10), :slug => "an-article"}),
+        Article.new({:title => "Some Article", :date => Date.new(2033, 4, 3), :slug => "some-article"})
       ]
       Article.stub!(:all).and_return(articles)
       Article.find(2033, 4, 3, "some-article").should == articles.last
     end
 
     it "knows it's path" do
-      article = Article.new("The best article ever", Date.new(1220, 5, 3), "content", "the-article-slug")
+      article = Article.new(:date => Date.new(1220, 5, 3), :slug => "the-article-slug")
       article.path.should == "/1220/05/03/the-article-slug"
     end
   end

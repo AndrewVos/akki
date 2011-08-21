@@ -4,11 +4,11 @@ module Akki
   class Article
     attr_accessor :title, :slug, :date, :content
 
-    def initialize(title, date, content, slug)
-      @title   = title
-      @date    = date
-      @content = content
-      @slug = slug
+    def initialize(params)
+      @title   = params[:title]
+      @date    = params[:date]
+      @content = params[:content]
+      @slug = params[:slug]
     end
 
     def path
@@ -43,11 +43,13 @@ module Akki
       def get_article path
         parts = File.read(path).split("\n\n", 2)
         yaml = YAML.load(parts[0])
-        content = parts[1]
-        title = yaml['title']
-        date  = Date.strptime(yaml['date'], '%Y/%m/%d')
-        slug = File.basename(path).split("-", 4).last.gsub(".txt", "")
-        Article.new(title, date, content, slug)
+        params = {
+          :content  => parts[1],
+          :title    => yaml['title'],
+          :date     => Date.strptime(yaml['date'], '%Y/%m/%d'),
+          :slug     => File.basename(path).split("-", 4).last.gsub(".txt", "")
+        }
+        Article.new(params)
       end
     end
   end
