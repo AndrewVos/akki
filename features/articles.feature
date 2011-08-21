@@ -14,7 +14,7 @@ Feature: Article Page
     And the article view:
     """
     %div.title= article.title
-    %div.content= article.render(settings)
+    %div.content= content
     %a{:href => article.path}
     """
     When I visit "/1983/05/23/simple-article"
@@ -25,21 +25,24 @@ Feature: Article Page
     <a href='/1983/05/23/simple-article'></a>
     """
 
-  Scenario: Article referencing settings object
+  Scenario: Article referencing context object
     Given I have the article file "1983-05-23-simple-article.txt"
     """
     title: Simple Article
     date:  1983/05/23
 
     = settings.title
+    = article.title
     """
+    And the application setting "title" with the value "The Blog Title"
     And the article view:
     """
-    = article.render(settings)
+    = content
     """
     And the application setting "title" with the value "The Blog Title"
     When I visit "/1983/05/23/simple-article"
     Then I should see:
     """
     The Blog Title
+    Simple Article
     """

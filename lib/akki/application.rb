@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'akki/article'
+require 'ostruct'
 
 module Akki
   class Application < Sinatra::Base
@@ -17,7 +18,8 @@ module Akki
       day   = params[:day].to_i
       slug  = params[:slug]
       article = Article::find(year, month, day, slug)
-      haml :article, :locals => { :article => article }
+      content = haml article.content, :locals => {:article => article}
+      haml :article, :locals => {:article => article, :content => content}
     end
   end
 end

@@ -3,18 +3,6 @@ require 'akki/article'
 
 module Akki
   describe Article do
-    it "renders the content" do
-      article = Article.new("an article", Date.new(2011, 10, 10), "%p article content", "an-article")
-      article.render(nil).should include '<p>article content</p>'
-    end
-
-    it "can renders objects passed in" do
-      object = mock :object
-      object.stub!(:value).and_return "Object Value"
-      article = Article.new("an article", Date.new(2011, 10, 10), "= object.value", "an-article")
-      article.render(binding).should include "Object Value"
-    end
-
     def article_should_match article, title, date, content, slug
       article.title.should    == title
       article.date.should     == date

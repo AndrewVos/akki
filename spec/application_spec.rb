@@ -48,8 +48,9 @@ module Akki
     describe "GET /23/10/2011/simple-article" do
       before do
         @article = mock :article
-        @article.stub!(:render).and_return 'article content'
         @article.stub!(:title).and_return 'article title'
+        @article.stub!(:content).and_return 'article content'
+        create_view "article.haml", "= content"
         Article.stub!(:find).and_return @article
       end
 
@@ -59,24 +60,21 @@ module Akki
         get '/2011/10/23/simple-article'
       end
 
-      it "passes the article through to the view" do
-        create_view "article.haml", "= article.render"
+      it "passes the article object through to the article" do
+        @article.stub!(:content).and_return '= article.title'
         get '/2011/10/23/simple-article'
-        last_response.body.should include "article content"
+        last_response.body.should include "article title"
       end
 
-      it "renders the article" do
-        create_view 'article.haml', '= article.render'
+      it "passes the article object through to the article view" do
+        create_view "article.haml", "= article.title"
         get '/2011/10/23/simple-article'
-        last_response.body.should include "article content"
+        last_response.body.should include "article title"
       end
 
-      it "passes the settings object through to the article" do
-        create_view 'article.haml', '= article.render(settings)'
-        Article.stub!(:find).and_return Article.new("article 1", nil, "= settings.title", "article1")
-        Application.set :title => "Blog Title"
+      it "passes the rendered article through to the article view" do
         get '/2011/10/23/simple-article'
-        last_response.body.should include "Blog Title"
+        last_response.body.should include "article content"
       end
     end
 

@@ -11,10 +11,6 @@ module Akki
       @slug = slug
     end
 
-    def render binding
-      Haml::Engine.new(content).render(binding)
-    end
-
     def path
       date.strftime("/%Y/%m/%d/") + slug
     end
