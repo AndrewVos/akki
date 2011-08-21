@@ -24,22 +24,22 @@ module Akki
       FileUtils.rm_rf @public_path
     end
 
-    def create_view name, contents
-      File.open(File.join(@views_path, name), 'w') do |file|
+    def write_file path, contents
+      File.open(path, 'w') do |file|
         file.write(contents)
       end
+    end
+
+    def create_view name, contents
+      write_file(File.join(@views_path, name), contents)
     end
 
     def create_public name, contents
-      File.open(File.join(@public_path, name), 'w') do |file|
-        file.write(contents)
-      end
+      write_file(File.join(@public_path, name), contents)
     end
 
     def create_page name, contents
-      File.open(File.join(@pages_path, name), 'w') do |file|
-        file.write(contents)
-      end
+      write_file(File.join(@pages_path, name), contents)
     end
 
     describe "GET /" do
