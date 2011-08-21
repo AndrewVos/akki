@@ -24,7 +24,7 @@ Given /^I have the view "([^"]*)" with the contents$/ do |view, contents|
   end
 end
 
-Given /^I have the page "([^"]*)":$/ do |page, contents|
+Given /^I have the page "([^"]*)" with the contents$/ do |page, contents|
   File.open(File.join(@pages_path, page), 'w') do |file|
     file.write(contents)
   end

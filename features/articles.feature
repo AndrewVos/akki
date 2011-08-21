@@ -18,7 +18,7 @@ Feature: Article Page
     And I have the view "article.haml" with the contents
     """
     %div.title= article.title
-    %div.content= content
+    %div.content= render_article(article)
     %a{:href => article.path}
     """
     When I visit "/1983/05/23/simple-article"
@@ -41,7 +41,7 @@ Feature: Article Page
     And the application setting "title" with the value "The Blog Title"
     And I have the view "article.haml" with the contents
     """
-    = content
+    = render_article(article)
     """
     And the application setting "title" with the value "The Blog Title"
     When I visit "/1983/05/23/simple-article"
@@ -67,7 +67,7 @@ Feature: Article Page
     And I have the view "article.haml" with the contents
     """
     Article
-    = content
+    = render_article(article)
     """
     When I visit "/1983/05/23/simple-article"
     Then I should see:

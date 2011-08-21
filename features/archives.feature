@@ -19,7 +19,7 @@ Feature: Archives
     title: Article 1
     date:  2008/04/23
     """
-    And I have the page "archives.haml":
+    And I have the page "archives.haml" with the contents
     """
     - articles.each do |article|
       %p= article.title

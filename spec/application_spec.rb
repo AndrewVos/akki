@@ -51,6 +51,15 @@ module Akki
         get "/"
         last_response.body.should include "Home Page"
       end
+
+      it "can render any article" do
+        Article.stub!(:all).and_return([
+          Article.new("article 23", nil, "%p article 23", "article1")
+        ])
+        create_view "index.haml", "= render_article(articles.first)"
+        get '/'
+        last_response.body.should include "article 23"
+      end
     end
 
     describe "GET /23/10/2011/simple-article" do
@@ -58,7 +67,8 @@ module Akki
         @article = mock :article
         @article.stub!(:title).and_return 'article title'
         @article.stub!(:content).and_return 'article content'
-        create_view "article.haml", "= content"
+        create_view "article.haml", "= render_article(article)"
+        Article.stub!(:all).and_return([@article])
         Article.stub!(:find).and_return @article
       end
 
@@ -74,20 +84,22 @@ module Akki
         last_response.body.should include "article title"
       end
 
+      it "can render any article" do
+        @article.stub!(:content).and_return '%p article content'
+        create_view "article.haml", "= render_article(articles.first)"
+        get '/2011/10/23/simple-article'
+        last_response.body.should include "<p>article content</p>"
+      end
+
       it "passes the article object through to the article view" do
         create_view "article.haml", "= article.title"
         get '/2011/10/23/simple-article'
         last_response.body.should include "article title"
       end
 
-      it "passes the rendered article through to the article view" do
-        get '/2011/10/23/simple-article'
-        last_response.body.should include "article content"
-      end
-
       it "does not render the layout when rendering the article content" do
         create_view "layout.haml", "Layout\n= yield"
-        create_view "article.haml", "Article\n= content"
+        create_view "article.haml", "Article\n= render_article(article)"
         get '/2011/10/23/simple-article'
         last_response.body.should_not include "Layout\nArticle\nLayout\narticle content"
       end
@@ -110,7 +122,7 @@ module Akki
       end
     end
 
-    describe "GET a page that lists articles" do
+    context "page that lists articles" do
       it "lists all articles" do
         Article.stub!(:all).and_return([
           Article.new("article 1", nil, "article 1 content", "article1"),
@@ -118,9 +130,8 @@ module Akki
         ])
 
         @pages.stub!(:all).and_return ["archives"]
-        Application.set :pages, [:archives]
         create_page 'archives.haml', "- articles.each do |a|\n  %p= a.title"
-        Application.set :pages => [:archives]
+        Application.set :pages, [:archives]
         get '/archives'
         last_response.body.should include "article 1"
         last_response.body.should include "article 2"
