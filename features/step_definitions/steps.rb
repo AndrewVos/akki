@@ -24,18 +24,6 @@ Given /^I have the view "([^"]*)" with the contents$/ do |view, contents|
   end
 end
 
-Given /^the layout view:$/ do |contents|
-  File.open(File.join(@views_path, "layout.haml"), 'w') do |file|
-    file.write(contents)
-  end
-end
-
-Given /^the article view:$/ do |contents|
-  File.open(File.join(@views_path, "article.haml"), 'w') do |file|
-    file.write(contents)
-  end
-end
-
 Given /^I have the page "([^"]*)":$/ do |page, contents|
   File.open(File.join(@pages_path, page), 'w') do |file|
     file.write(contents)

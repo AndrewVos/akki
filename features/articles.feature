@@ -15,7 +15,7 @@ Feature: Article Page
 
     %p article content
     """
-    And the article view:
+    And I have the view "article.haml" with the contents
     """
     %div.title= article.title
     %div.content= content
@@ -39,7 +39,7 @@ Feature: Article Page
     = article.title
     """
     And the application setting "title" with the value "The Blog Title"
-    And the article view:
+    And I have the view "article.haml" with the contents
     """
     = content
     """
@@ -59,12 +59,12 @@ Feature: Article Page
 
     article content
     """
-    And the layout view:
+    And I have the view "layout.haml" with the contents
     """
     Layout
     = yield
     """
-    And the article view:
+    And I have the view "article.haml" with the contents
     """
     Article
     = content
