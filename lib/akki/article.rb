@@ -11,8 +11,8 @@ module Akki
       @slug = slug
     end
 
-    def render
-      Haml::Engine.new(content).render
+    def render binding
+      Haml::Engine.new(content).render(binding)
     end
 
     def path

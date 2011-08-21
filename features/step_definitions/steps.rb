@@ -36,6 +36,10 @@ Given /^I visit "([^"]*)"$/ do |url|
   visit url
 end
 
+Given /^the application setting "([^"]*)" with the value "([^"]*)"$/ do |name, value|
+  Akki::Application.set name, value
+end
+
 Then /^I should see:$/ do |content|
   page.source.should include content
 end

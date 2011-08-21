@@ -70,6 +70,14 @@ module Akki
         get '/2011/10/23/simple-article'
         last_response.body.should include "article content"
       end
+
+      it "passes the settings object through to the article" do
+        create_view 'article.haml', '= article.render(settings)'
+        Article.stub!(:find).and_return Article.new("article 1", nil, "= settings.title", "article1")
+        Application.set :title => "Blog Title"
+        get '/2011/10/23/simple-article'
+        last_response.body.should include "Blog Title"
+      end
     end
 
     describe "GET /page_name" do
