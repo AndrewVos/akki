@@ -17,9 +17,6 @@ module Akki
       FileUtils.mkdir_p @views_path
       FileUtils.mkdir_p @public_path
       FileUtils.mkdir_p @pages_path
-
-      @pages = mock :pages
-      @pages.stub!(:all).and_return []
     end
 
     after do
@@ -112,7 +109,6 @@ module Akki
             Article.new("article 2", nil, "%p article 2 content", "article2")
           ])
 
-          @pages.stub!(:all).and_return ["archives"]
           create_page 'archives.haml', "- articles.each do |a|\n  = render_article(a)"
           Application.set :pages, [:archives]
           get '/archives'
