@@ -76,6 +76,13 @@ module Akki
         get '/2011/10/23/simple-article'
         last_response.body.should include "article content"
       end
+
+      it "does not render the layout when rendering the article content" do
+        create_view "layout.haml", "Layout\n= yield"
+        create_view "article.haml", "Article\n= content"
+        get '/2011/10/23/simple-article'
+        last_response.body.should_not include "Layout\nArticle\nLayout\narticle content"
+      end
     end
 
     describe "GET /2011/10/01/article-that-does-not-exist" do

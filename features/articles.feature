@@ -50,3 +50,29 @@ Feature: Article Page
     The Blog Title
     Simple Article
     """
+
+  Scenario: Article does not get rendered with the layout
+    Given I have the article file "1983-05-23-simple-article.txt"
+    """
+    title: Simple Article
+    date:  1983/05/23
+
+    article content
+    """
+    And the layout view:
+    """
+    Layout
+    = yield
+    """
+    And the article view:
+    """
+    Article
+    = content
+    """
+    When I visit "/1983/05/23/simple-article"
+    Then I should see:
+    """
+    Layout
+    Article
+    article content
+    """

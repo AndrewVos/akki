@@ -18,6 +18,12 @@ Given /^I have the article file "([^"]*)"$/ do |article_file, article_contents|
   end
 end
 
+Given /^the layout view:$/ do |contents|
+  File.open(File.join(@views_path, "layout.haml"), 'w') do |file|
+    file.write(contents)
+  end
+end
+
 Given /^the article view:$/ do |contents|
   File.open(File.join(@views_path, "article.haml"), 'w') do |file|
     file.write(contents)
@@ -41,7 +47,7 @@ Given /^the application setting "([^"]*)" with the value "([^"]*)"$/ do |name, v
 end
 
 Then /^I should see:$/ do |content|
-  page.source.should include content
+  page.source.chomp.should == content
 end
 
 Then /^I should see a (\d+) html status code$/ do |status_code|

@@ -19,7 +19,7 @@ module Akki
       slug  = params[:slug]
       article = Article::find(year, month, day, slug)
       pass unless article
-      content = haml article.content, :locals => {:article => article}
+      content = haml article.content, :layout => false, :locals => {:article => article}
       haml :article, :locals => {:article => article, :content => content}
     end
   end
