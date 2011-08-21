@@ -7,7 +7,7 @@ module Akki
     set :root, File.join(File.dirname(__FILE__), '..', '..')
 
     get '/?' do
-      render_page
+      render_page :"pages/index"
     end
 
     get '/:page_name/?' do

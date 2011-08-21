@@ -46,19 +46,10 @@ module Akki
     end
 
     describe "GET /" do
-      it "renders the home page" do
-        create_view "index.haml", "Home Page"
+      it "renders the index page" do
+        create_page "index.haml", "Home Page"
         get "/"
         last_response.body.should include "Home Page"
-      end
-
-      it "can render any article" do
-        Article.stub!(:all).and_return([
-          Article.new("article 23", nil, "%p article 23", "article1")
-        ])
-        create_view "index.haml", "= render_article(articles.first)"
-        get '/'
-        last_response.body.should include "article 23"
       end
     end
 

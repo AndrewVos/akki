@@ -4,7 +4,7 @@ Feature: Home Page
   I want to be able to render a home page view
 
   Scenario: Simple home page
-    Given I have the view "index.haml" with the contents
+    Given I have the page "index.haml" with the contents
     """
     Welcome to my blog
     """
