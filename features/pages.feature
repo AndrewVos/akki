@@ -33,7 +33,7 @@ Feature: Pages
 
     %p arbitrary article content
     """
-    And I have the view "article.haml" with the contents
+    And I have the page "article.haml" with the contents
     """
     Article
     = render_article(articles.last)

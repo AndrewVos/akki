@@ -58,13 +58,13 @@ module Akki
         @article = mock :article
         @article.stub!(:title).and_return 'article title'
         @article.stub!(:content).and_return 'article content'
-        create_view "article.haml", "= render_article(article)"
+        create_page "article.haml", "= render_article(article)"
         Article.stub!(:all).and_return([@article])
         Article.stub!(:find).and_return @article
       end
 
       it "loads an article" do
-        create_view "article.haml", ""
+        create_page "article.haml", ""
         Article.should_receive(:find).with(2011, 10, 23, "simple-article")
         get '/2011/10/23/simple-article'
       end
@@ -77,20 +77,20 @@ module Akki
 
       it "can render any article" do
         @article.stub!(:content).and_return '%p article content'
-        create_view "article.haml", "= render_article(articles.first)"
+        create_page "article.haml", "= render_article(articles.first)"
         get '/2011/10/23/simple-article'
         last_response.body.should include "<p>article content</p>"
       end
 
       it "passes the article object through to the article view" do
-        create_view "article.haml", "= article.title"
+        create_page "article.haml", "= article.title"
         get '/2011/10/23/simple-article'
         last_response.body.should include "article title"
       end
 
       it "does not render the layout when rendering the article content" do
         create_view "layout.haml", "Layout\n= yield"
-        create_view "article.haml", "Article\n= render_article(article)"
+        create_page "article.haml", "Article\n= render_article(article)"
         get '/2011/10/23/simple-article'
         last_response.body.should_not include "Layout\nArticle\nLayout\narticle content"
       end

@@ -7,13 +7,13 @@ module Akki
     set :root, File.join(File.dirname(__FILE__), '..', '..')
 
     get '/?' do
-      render_page :"pages/index"
+      render_page :index
     end
 
     get '/:page_name/?' do
       page_name = params[:page_name].to_sym
       pass unless settings.pages.include? page_name
-      render_page :"pages/#{page_name}"
+      render_page page_name
     end
 
     get "/:year/:month/:day/:slug/?" do
@@ -28,7 +28,7 @@ module Akki
 
     def render_page page = :index, locals = {}
       default_locals = {:articles => Article.all, :article => nil}
-      haml page, :locals => default_locals.merge(locals)
+      haml :"pages/#{page}", :locals => default_locals.merge(locals)
     end
 
     def render_article article

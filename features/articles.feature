@@ -15,7 +15,7 @@ Feature: Article Page
 
     %p article content
     """
-    And I have the view "article.haml" with the contents
+    And I have the page "article.haml" with the contents
     """
     %div.title= article.title
     %div.content= render_article(article)
@@ -29,7 +29,7 @@ Feature: Article Page
     <a href='/1983/05/23/simple-article'></a>
     """
 
-  Scenario: Article referencing context object
+  Scenario: Article referencing settings object
     Given I have the article file "1983-05-23-simple-article.txt"
     """
     title: Simple Article
@@ -39,7 +39,7 @@ Feature: Article Page
     = article.title
     """
     And the application setting "title" with the value "The Blog Title"
-    And I have the view "article.haml" with the contents
+    And I have the page "article.haml" with the contents
     """
     = render_article(article)
     """
@@ -64,7 +64,7 @@ Feature: Article Page
     Layout
     = yield
     """
-    And I have the view "article.haml" with the contents
+    And I have the page "article.haml" with the contents
     """
     Article
     = render_article(article)
