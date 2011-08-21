@@ -6,6 +6,10 @@ module Akki
   class Application < Sinatra::Base
     set :root, File.join(File.dirname(__FILE__), '..', '..')
 
+    get '/?' do
+      haml :index
+    end
+
     get '/:page_name/?' do
       page_name = params[:page_name].to_sym
       pass unless settings.pages.include? page_name

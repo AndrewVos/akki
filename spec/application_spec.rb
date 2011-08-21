@@ -45,6 +45,14 @@ module Akki
       end
     end
 
+    describe "GET /" do
+      it "renders the home page" do
+        create_view "index.haml", "Home Page"
+        get "/"
+        last_response.body.should include "Home Page"
+      end
+    end
+
     describe "GET /23/10/2011/simple-article" do
       before do
         @article = mock :article

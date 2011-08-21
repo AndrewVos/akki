@@ -18,6 +18,12 @@ Given /^I have the article file "([^"]*)"$/ do |article_file, article_contents|
   end
 end
 
+Given /^I have the view "([^"]*)" with the contents$/ do |view, contents|
+  File.open(File.join(@views_path, view), 'w') do |file|
+    file.write(contents)
+  end
+end
+
 Given /^the layout view:$/ do |contents|
   File.open(File.join(@views_path, "layout.haml"), 'w') do |file|
     file.write(contents)
