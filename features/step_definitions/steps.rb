@@ -47,3 +47,7 @@ end
 Then /^I should see a (\d+) html status code$/ do |status_code|
   page.status_code.should == status_code.to_i
 end
+
+Then /^the content type should be "([^"]*)"$/ do |content_type|
+  page.response_headers['Content-Type'].should == content_type
+end

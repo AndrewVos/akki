@@ -120,6 +120,24 @@ module Akki
           last_response.body.should include "<p>article 2 content</p>"
         end
       end
+
+      context "template name ending in .xml" do
+        before do
+          create_page "index.xml.haml", "!!! XML"
+          Application.set :pages, [:"index.xml"]
+        end
+
+        it "sets the content type to xml" do
+          get "/index.xml"
+          last_response.content_type.should == "application/atom+xml"
+        end
+
+        it "does not render the layout" do
+          create_view "layout.haml", "Layout"
+          get "/index.xml"
+          last_response.body.should_not include "Layout"
+        end
+      end
     end
 
     describe "GET page-that-does-not-exist" do

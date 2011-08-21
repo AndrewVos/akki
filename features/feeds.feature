@@ -3,6 +3,14 @@ Feature: Feeds
   As a blogger
   I want to be able to expose my rss feeds
 
+  Scenario: Feed content type
+    Given I have the page "index.xml.haml" with the contents
+    """
+    !!! XML
+    """
+    When I visit "/index.xml"
+    Then the content type should be "application/atom+xml"
+
   Scenario: Index page
     Given I have the page "index.xml.haml" with the contents
     """

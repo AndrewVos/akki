@@ -28,7 +28,13 @@ module Akki
 
     def render_page page = :index, locals = {}
       default_locals = {:articles => Article.all, :article => nil}
-      haml :"pages/#{page}", :locals => default_locals.merge(locals)
+
+      if page.to_s.end_with? ".xml"
+        content_type :atom
+        haml :"pages/#{page}", :locals => default_locals.merge(locals), :layout => false
+      else
+        haml :"pages/#{page}", :locals => default_locals.merge(locals)
+      end
     end
 
     def render_article article
