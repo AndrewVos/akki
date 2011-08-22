@@ -8,6 +8,15 @@ module Akki
 
     attr_reader :context
 
+    def create_default_context
+      @context = Context.new
+      @context.articles = Article.all
+    end
+
+    before do
+      create_default_context
+    end
+
     get '/?' do
       render_page :index
     end
@@ -15,8 +24,6 @@ module Akki
     get '/:page_name/?' do
       page_name = params[:page_name].to_sym
       pass unless settings.pages.include? page_name
-      @context = Context.new
-      @context.articles = Article.all
       render_page page_name
     end
 
@@ -28,9 +35,7 @@ module Akki
       article = Article::find(year, month, day, slug)
       pass unless article
 
-      @context = Context.new
       @context.article = article
-      @context.articles = Article.all
       render_page :article
     end
 

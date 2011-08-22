@@ -50,10 +50,26 @@ module Akki
     end
 
     describe "GET /" do
-      it "renders the index page" do
+      it "renders the index view" do
         create_page "index.haml", "Home Page"
         get "/"
         last_response.body.should include "Home Page"
+      end
+
+      it "passes the context object through to the index view" do
+        mock_context
+        create_page "index.haml", "= context.value"
+        get "/"
+        last_response.body.should == "the context value\n"
+      end
+
+      it "adds the articles to the context object" do
+        context = mock_context
+        articles = mock(:articles).as_null_object
+        Article.stub!(:all).and_return(articles)
+        create_page 'index.haml', 'this is my page!'
+        context.should_receive(:articles=).with(articles)
+        get "/"
       end
     end
 
