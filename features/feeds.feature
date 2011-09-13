@@ -9,7 +9,7 @@ Feature: Feeds
     !!! XML
     """
     When I visit "/index.xml"
-    Then the content type should be "application/atom+xml"
+    Then the content type should be "application/xml;charset=utf-8"
 
   Scenario: Index page
     Given I have the page "index.xml.haml" with the contents

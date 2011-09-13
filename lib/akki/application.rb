@@ -41,8 +41,8 @@ module Akki
 
     def render_page page = :index
       if page.to_s.end_with? ".xml"
-        content_type :atom
-        haml :"pages/#{page}", :layout => false
+        content_type "application/xml"
+        haml :"pages/#{page}", :layout => false, :format => :xhtml, :escape_html => true
       else
         haml :"pages/#{page}"
       end

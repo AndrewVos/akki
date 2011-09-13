@@ -167,7 +167,7 @@ module Akki
 
         it "sets the content type to xml" do
           get "/index.xml"
-          last_response.content_type.should == "application/atom+xml"
+          last_response.content_type.should == "application/xml;charset=utf-8"
         end
 
         it "does not render the layout" do
