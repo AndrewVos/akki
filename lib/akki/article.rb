@@ -41,7 +41,7 @@ module Akki
       end
 
       def get_article path
-        parts = File.read(path).split("\n\n", 2)
+        parts = File.read(path, :encoding => 'UTF-8').split("\n\n", 2)
         yaml = YAML.load(parts[0])
         params = {
           :content  => parts[1],
